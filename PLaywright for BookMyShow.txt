@@ -1,0 +1,40 @@
+public class Main {
+    public static void main(String[] args)
+    {
+        try (Playwright playwright = Playwright.create())
+        {
+            Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+            BrowserContext browserContext = browser.newContext(new Browser.NewContextOptions().setUserAgent("Chrome/116.0.5845.96"));
+            System.out.println("Browser initiated");
+           Page page = browserContext.newPage();
+            // Maximize the browser window
+            page.setViewportSize(1920,1080);
+            page.navigate("https://in.bookmyshow.com/explore/home/hyderabad");
+            System.out.println(page.title());
+            page.waitForLoadState();
+
+            //Clicking on Search bar
+            page.click("#\\34 ");
+            System.out.println("Searchbar Clicked");
+            page.waitForLoadState();
+            //Click on Movie
+            page.click("img[alt='Jailer']");
+            System.out.println("Movie Selected");
+            page.waitForLoadState();
+
+            //Book tickets
+            page.click("button[class='sc-8f9mtj-0 sc-8f9mtj-1 sc-1vmod7e-0 bGKFux']");
+            System.out.println("Ticket Booking started...");
+            page.waitForLoadState();
+
+            //Format selection
+            page.click("div[class='sc-vhz3gb-3 ksLpgw']");
+            page.waitForTimeout(2000); // Wait for 1 second
+            System.out.println("Format selected");
+            page.waitForURL("https://in.bookmyshow.com/buytickets/jailer-telugu-hyderabad/movie-hyd-ET00366170-MT/20230819", new Page.WaitForURLOptions().setTimeout(60000)); // Increased to 60 seconds
+           // Verify the current URL after navigation
+            String currentUrl = page.url();
+            System.out.println("Current URL: " + currentUrl);
+        }
+    }
+}
